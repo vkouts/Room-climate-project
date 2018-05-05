@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="text\html; charset=UTF-8" http-equiv="content-type" />
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+        <script src="/static/node_modules/flot/jquery.js"></script>
+        <script src="/static/node_modules/flot/jquery.flot.js"></script>
+        <script src="/static/node_modules/flot/jquery.flot.time.js"></script>
+        <script src="/static/node_modules/flot/jquery.flot.axislabels.js"></script>
+        <style>
+            .climat-graphic {
+                width:500px;
+                height:300px;
+                margin: 0 auto;
+            }
+            .graphic-header {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+       <!-- div style="margin-left: 50px;margin-bottom: 30px;">Total records: {{ records|length }}</div -->
+       <div class="content">
+           <div class="row">
+                <div class="col-md-6">
+                    <div class="graphic-header">Температура</div>
+                    <div id="temp" class="climat-graphic"></div>
+                </div>
+                <div class="col-md-6">
+                    <div class="graphic-header">Влажность</div>
+                    <div id="hum" class="climat-graphic"></div>
+                </div>
+               <div class="col-md-6">
+                    <div class="graphic-header">Содержание CO2</div>
+                    <div id="co2" class="climat-graphic"></div>
+                </div>
+           </div>
+       </div>
+
+
+       <script type="text/javascript">
+           function gd(year, month, day, hour, minute, second) {
+                return new Date(year, month - 1, day, hour, minute, second).getTime();
+           }
+           var temp = [
+               {% for record in records %}
+                   [{{ loop.index0 }}, {{ record.temp }}],
+               {% endfor %}
+           ];
+
+           var hum = [
+               {% for record in records %}
+                   [gd({{ record.timestamp.year }}, {{ record.timestamp.month }}, {{ record.timestamp.day }}, {{ record.timestamp.hour }}, {{ record.timestamp.minute }}, {{ record.timestamp.second }}), {{ record.hum }}],
+               {% endfor %}
+           ];
+
+           var co2 = [
+               {% for record in records %}
+                   [gd({{ record.timestamp.year }}, {{ record.timestamp.month }}, {{ record.timestamp.day }}, {{ record.timestamp.hour }}, {{ record.timestamp.minute }}, {{ record.timestamp.second }}), {{ record.co2 }}],
+               {% endfor %}
+           ];
+
+           $.plot($("#temp"), [temp], {  xaxis: { max: temp.length } });
+           $.plot($("#hum"), [hum], {  });
+           $.plot($("#co2"), [co2], {  });
+       </script>
+    </body>
+</html>
