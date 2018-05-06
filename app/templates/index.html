@@ -49,7 +49,7 @@
            }
            var temp = [
                {% for record in records %}
-                   [{{ loop.index0 }}, {{ record.temp }}],
+                   [gd({{ record.timestamp.year }}, {{ record.timestamp.month }}, {{ record.timestamp.day }}, {{ record.timestamp.hour }}, {{ record.timestamp.minute }}, {{ record.timestamp.second }}), {{ record.temp }}],
                {% endfor %}
            ];
 
@@ -65,9 +65,9 @@
                {% endfor %}
            ];
 
-           $.plot($("#temp"), [temp], {  xaxis: { max: temp.length } });
-           $.plot($("#hum"), [hum], {  });
-           $.plot($("#co2"), [co2], {  });
+           $.plot($("#temp"), [temp], {  });
+           $.plot($("#hum"),  [hum],  {  });
+           $.plot($("#co2"),  [co2],  {  });
        </script>
     </body>
 </html>
